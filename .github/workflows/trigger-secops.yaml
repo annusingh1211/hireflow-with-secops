@@ -18,7 +18,7 @@ jobs:
           echo "Branch: ${{ github.ref_name }}"
           echo "Commit SHA: ${{ github.sha }}"
 
-      - name: Trigger Secops repository
+      - name: Trigger SecOps repository
         env:
           SECOPS_TRIGGER_TOKEN: ${{ secrets.SECOPS_TRIGGER_TOKEN }}
         run: |
@@ -37,3 +37,16 @@ jobs:
                 "commit_sha": "${{ github.sha }}"
               }
             }'
+
+      - name: Checkout Exact Application Commit
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ github.repository }}
+          ref: ${{ github.sha }}
+          path: application
+
+      - name: Verify Checked Out Commit
+        run: |
+          echo "Application source successfully checked out"
+          echo "Checked out commit SHA:"
+          git -C application rev-parse HEAD
